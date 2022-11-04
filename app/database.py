@@ -3,6 +3,7 @@ import os
 import sqlalchemy
 from sqlalchemy import create_engine, Column, ARRAY, Integer, Text, DateTime, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import OperationalError
 
 DB_URL = f"postgresql+psycopg2://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}" \
          f"@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"
@@ -21,5 +22,10 @@ class Document(Base):
 
 
 def prepare_db():
-    if not sqlalchemy.inspect(engine).get_table_names():
-        Base.metadata.create_all(engine)
+    try:
+        if not sqlalchemy.inspect(engine).get_table_names():
+            Base.metadata.create_all(engine)
+    except OperationalError:
+        print("Wrong database info. Check DB_USER, DB_PASSWORD, DB_NAME and DB_HOST variables.")
+        print(f"Current URL:{DB_URL}")
+        exit(1)

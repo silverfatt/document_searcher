@@ -8,12 +8,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event():
-    try:
-        prepare_db()
-    except Exception:
-        print("Wrong database info. Check DB_USER, DB_PASSWORD, DB_NAME and DB_HOST variables.")
-        print(f"Current URL:{DB_URL}")
-        exit(1)
+    prepare_db()
 
 
 app.include_router(router)
