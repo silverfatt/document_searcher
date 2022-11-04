@@ -1,32 +1,26 @@
 from datetime import datetime
 
 from elasticsearch import Elasticsearch
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from sqlalchemy.orm import sessionmaker
 
-from app.database import prepare_db, engine, Document, DB_URL
+from app.database import engine, Document
 from app.helpers import make_query
 from app.schemas import DocumentScheme
 
-app = FastAPI()
+router = APIRouter()
 es = Elasticsearch(hosts=['http://localhost:9200'])
-try:
-    prepare_db()
-except Exception:
-    print("Wrong database info. Check DB_USER, DB_PASSWORD, DB_NAME and DB_HOST variables.")
-    print(f"Current URL:{DB_URL}")
-    exit(1)
 
 session = sessionmaker(bind=engine)
 s = session()
 
 
-@app.get("/")
+@router.get("/")
 async def ping():
     return {"message": "hello"}
 
 
-@app.post("/add")
+@router.post("/add")
 async def add_document(document: DocumentScheme):
     """
     Add a new document do database
@@ -47,7 +41,7 @@ async def add_document(document: DocumentScheme):
             'created_date': new_document.created_date}
 
 
-@app.delete("/delete")
+@router.delete("/delete")
 async def delete_document(doc_id: int):
     """
     Delete a document from database
@@ -61,7 +55,7 @@ async def delete_document(doc_id: int):
     return {'deleted': doc_id}
 
 
-@app.get("/search")
+@router.get("/search")
 async def search_document(pattern_text: str):
     """
     Find first 20 documents with pattern_text's entries
