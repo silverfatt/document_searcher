@@ -1,12 +1,19 @@
-from fastapi import FastAPI
-from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
-from database import prepare_db, engine, Document
+from fastapi import FastAPI
+from sqlalchemy.orm import sessionmaker
+
+from database import prepare_db, engine, Document, DB_URL
 from schemas import DocumentScheme
 
 app = FastAPI()
-prepare_db()
+try:
+    prepare_db()
+except Exception:
+    print("Wrong database info. Check DB_USER, DB_PASSWORD, DB_NAME and DB_HOST variables.")
+    print(f"Current URL:{DB_URL}")
+    exit(1)
+
 session = sessionmaker(bind=engine)
 s = session()
 
@@ -18,6 +25,9 @@ async def root():
 
 @app.post("/add")
 async def add_document(document: DocumentScheme):
+    """
+    Add new document do database
+    """
     new_document = Document(rubrics=document.rubrics, text=document.text, created_date=datetime.now())
     s.add(new_document)
     s.commit()
@@ -26,6 +36,9 @@ async def add_document(document: DocumentScheme):
 
 @app.delete("/delete")
 async def delete_document(doc_id: int):
+    """
+    Delete document from database
+    """
     document_to_delete = s.query(Document).filter(Document.doc_id == doc_id).first()
     if not document_to_delete:
         return {'not exists': doc_id}

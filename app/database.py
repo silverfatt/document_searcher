@@ -4,11 +4,10 @@ import sqlalchemy
 from sqlalchemy import create_engine, Column, ARRAY, Integer, Text, DateTime, String
 from sqlalchemy.ext.declarative import declarative_base
 
-username = os.environ['DB_USER']
-password = os.environ['DB_PASSWORD']
-db_name = os.environ['DB_NAME']
-db_host = os.environ['DB_HOST']
-engine = create_engine(f"postgresql+psycopg2://{username}:{password}@{db_host}/{db_name}")
+DB_URL = f"postgresql+psycopg2://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}" \
+         f"@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"
+
+engine = create_engine(DB_URL)
 Base = declarative_base()
 
 
@@ -22,8 +21,5 @@ class Document(Base):
 
 
 def prepare_db():
-    if sqlalchemy.inspect(engine).get_table_names() == []:
+    if not sqlalchemy.inspect(engine).get_table_names():
         Base.metadata.create_all(engine)
-
-
-print(f"postgresql+psycopg2://{username}:{password}@{db_host}/{db_name}")
