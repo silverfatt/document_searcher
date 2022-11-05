@@ -2,8 +2,8 @@ import os
 
 import sqlalchemy
 from sqlalchemy import create_engine, Column, ARRAY, Integer, Text, DateTime, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.declarative import declarative_base
 
 DB_URL = f"postgresql+psycopg2://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}" \
          f"@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"

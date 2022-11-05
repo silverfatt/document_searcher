@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
+from app.database import prepare_db
 from app.routes import router
-from app.database import prepare_db, DB_URL
 
 app = FastAPI()
 
