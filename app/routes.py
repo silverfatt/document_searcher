@@ -5,9 +5,10 @@ from sqlalchemy.orm import sessionmaker
 from app.database import db_engine
 from app.operations import add_doc, delete_doc, search_doc
 from app.schemas import DocumentScheme
+import os
 
 router = APIRouter()
-es = Elasticsearch(hosts=['http://localhost:9200'])
+es = Elasticsearch(hosts=[f'http://{os.environ["ES_HOST"]}:9200'])
 session = sessionmaker(bind=db_engine)
 s = session()
 
