@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 DB_URL = f"postgresql+psycopg2://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}" \
          f"@{os.environ['DB_HOST']}/{os.environ['DB_NAME']}"
 
-engine = create_engine(DB_URL)
+db_engine = create_engine(DB_URL)
 Base = declarative_base()
 
 
@@ -21,7 +21,7 @@ class Document(Base):
     created_date = Column(DateTime)
 
 
-def prepare_db():
+def prepare_db(engine):
     try:
         if not sqlalchemy.inspect(engine).get_table_names():
             Base.metadata.create_all(engine)

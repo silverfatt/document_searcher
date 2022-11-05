@@ -2,13 +2,13 @@ from elasticsearch import Elasticsearch
 from fastapi import APIRouter
 from sqlalchemy.orm import sessionmaker
 
-from app.database import engine
+from app.database import db_engine
 from app.operations import add_doc, delete_doc, search_doc
 from app.schemas import DocumentScheme
 
 router = APIRouter()
 es = Elasticsearch(hosts=['http://localhost:9200'])
-session = sessionmaker(bind=engine)
+session = sessionmaker(bind=db_engine)
 s = session()
 
 
