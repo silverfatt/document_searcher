@@ -1,1 +1,0 @@
-docker run -d --name cont -p 80:80 -e DB_NAME=documents -e DB_HOST=localhost -e DB_USER=postgres -e DB_PASSWORD=Kendol2002 document_searcher
